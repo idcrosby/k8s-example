@@ -13,6 +13,7 @@ var Count int = 0
 var logger *log.Logger
 var f *os.File
 var countF *os.File
+var message string = "Hello From Kubernetes." 
 
 func main() {
 
@@ -38,20 +39,20 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	f.WriteString("Request recived at " + time.Now().String() + "\n")
 	
 	host, _ := os.Hostname()
-	fmt.Fprint(w, "Hello From Kubernetes. I'm running on", host)
+	fmt.Fprint(w, message + "\nI'm running on ", host, "\n")
 }
 
 func readiness(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Readiness Probe called at %s", time.Now().String())
 	f.WriteString("Readiness Probe called at " + time.Now().String() + "\n")
-	time.Sleep(1500 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 	w.Write([]byte("I'm ready."))
 }
 
 func liveness(w http.ResponseWriter, r *http.Request) {
 	f.WriteString("Liveness probe called at %s" + time.Now().String() + "\n")
 	fmt.Println("Liveness probe called at %s", time.Now().String())
-	time.Sleep(1500 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 	w.Write([]byte("I am Alive!"))
 }
 
