@@ -37,4 +37,10 @@ node {
     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
         app.push()
     }
+
+    echo 'Pushing Docker Image Locally'
+    stage("Push Local")
+    docker.withRegistry('http://localhost:5000/') {
+        app.push()
+    }
 }
