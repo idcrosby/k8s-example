@@ -29,7 +29,7 @@ node {
 
     echo 'Testing Docker image externally'
     stage("test image v2") {
-        docker cp test.sh ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}
+        docker.copy(test.sh, ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME})
         docker.image("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}").inside {
             sh './test.sh'
         }
