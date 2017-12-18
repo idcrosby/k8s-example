@@ -13,7 +13,7 @@ var Count int = 0
 var logger *log.Logger
 var f *os.File
 var countF *os.File
-var message string = "Hello From Kubernetes." 
+var message string = "Hello From Adidas." 
 
 func main() {
 
