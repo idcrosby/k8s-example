@@ -1,7 +1,9 @@
 node {
     checkout scm
-    def DOCKER_HUB_ACCOUNT = 'icrosby'
-    def DOCKER_IMAGE_NAME = 'k8s-example-adidas'
+    environment {
+       DOCKER_HUB_ACCOUNT = 'icrosby'
+       DOCKER_IMAGE_NAME = 'k8s-example-adidas'
+    }
 
     echo 'Building Go App'
     stage("build") {
@@ -23,7 +25,7 @@ node {
 
     echo 'Build v2'
     stage('Build Image v2') {
-        sh 'docker build -t ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME} --label key=value .' 
+        sh 'docker build -t $DOCKER_HUB_ACCOUNT/$DOCKER_IMAGE_NAME --label key=value .' 
     }
 
     echo 'Testing Docker image'
