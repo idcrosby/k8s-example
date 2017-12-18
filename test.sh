@@ -5,7 +5,7 @@ set -eu
 ID=$! # ID of webserver process, so we can kill it
 
 tests_passed=true
-expected="Hello From Kubernetes."
+expected="Hello From Adidas."
 output=$(curl -s localhost:8080)
 if [[ $output == *"$expected"* ]]; then
   echo "Test Success"
