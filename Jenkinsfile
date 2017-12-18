@@ -23,7 +23,7 @@ node {
     echo 'Testing Docker image'  
     stage("test image") {
         docker.image("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}").inside {
-            writeFile: '/test.sh', text: "#!/bin/bash
+            writeFile file: '/test.sh', text: "#!/bin/bash
 set -eu
 
 /home/server &
