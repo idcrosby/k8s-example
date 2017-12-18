@@ -1,6 +1,5 @@
 node {
     checkout scm
-    echo $GIT_COMMIT
     
     environment {
        DOCKER_HUB_ACCOUNT = 'icrosby'
