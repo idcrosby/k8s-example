@@ -24,7 +24,7 @@ node {
 
     echo 'Building Docker image'
     stage('BuildImage')
-    def app = docker.build("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${JOB_NAME}_${BUILD_NUMBER}", '.')
+    def app = docker.build("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${JOB_NAME}_${GIT_COMMIT}", '.')
 
     echo 'Testing Docker image'
     stage("test image") {
