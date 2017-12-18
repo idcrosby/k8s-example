@@ -19,7 +19,11 @@ node {
     echo 'Building Docker image'
     stage('BuildImage') {
         def app = docker.build("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}", '.')
-        sh "echo $app"
+    }
+
+    echo 'Build v2'
+    stage('Build Image v2') {
+        sh 'docker build -t ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME} --label key=value .' 
     }
 
     echo 'Testing Docker image'
