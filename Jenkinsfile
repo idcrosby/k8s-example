@@ -55,7 +55,7 @@ node {
     stage("Deploy") 
     docker.image('smesch/kubectl').inside{
         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-            sh "kubectl --kubeconfig=$KUBECONFIG set image deployment/k8s-example k8s-example=icrosby/k8s-example-adidas:production"
+            sh "kubectl --kubeconfig=$KUBECONFIG set image deployment/k8s-example k8s-example=icrosby/k8s-example-adidas:${JOB_NAME}_${BUILD_NUMBER}"
         }
     }
 }
