@@ -43,4 +43,12 @@ node {
     docker.withRegistry('http://localhost:5000/') {
         app.push()
     }
+
+    echo "Deploying image"
+    stage("Deploy") 
+    docker.image('smesch/kubectl').inside{
+        withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+            sh "kubectl --kubeconfig=$KUBECONFIG apply -f deployment.yaml --validate=false"
+        }
+    }
 }
