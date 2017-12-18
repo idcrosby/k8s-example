@@ -1,6 +1,6 @@
 node {
     checkout scm
-    
+
     environment {
        DOCKER_HUB_ACCOUNT = 'icrosby'
        DOCKER_IMAGE_NAME = 'k8s-example-adidas'
@@ -44,12 +44,18 @@ node {
     docker.withRegistry('http://localhost:5000/') {
         app.push()
     }
+    
+    echo 'Tag as Production'
+    stage("Tag")
+    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
+        app.push("production")
+    }
 
     echo "Deploying image"
     stage("Deploy") 
     docker.image('smesch/kubectl').inside{
         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-            sh "kubectl --kubeconfig=$KUBECONFIG set image deployment/k8s-example k8s-example=icrosby/k8s-example-adidas:${JOB_NAME}_${BUILD_NUMBER}"
+            sh "kubectl --kubeconfig=$KUBECONFIG set image deployment/k8s-example k8s-example=icrosby/k8s-example-adidas:production"
         }
     }
 }
