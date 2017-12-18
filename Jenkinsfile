@@ -20,17 +20,35 @@ node {
     stage('BuildImage') 
     def app = docker.build("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}", '.')
 
-    echo 'Testing Docker image'
+    echo 'Testing Docker image'  
     stage("test image") {
         docker.image("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}").inside {
-            sh './test.sh'
-        }
-    }
+            writeFile: '/test.sh', text: "#!/bin/bash
+set -eu
 
-    echo 'Testing Docker image externally'
-    stage("test image v2") {
-        docker.copy(test.sh, ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME})
-        docker.image("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}").inside {
+/home/server &
+ID=$! # ID of webserver process, so we can kill it
+
+tests_passed=true
+expected="Hello From Adidas."
+output=$(curl -s localhost:8080)
+if [[ $output == *"$expected"* ]]; then
+  echo "Test Success"
+else
+  echo "Test Failure"
+  echo "$expected != $output"
+  tests_passed=false
+fi
+
+
+kill $ID
+
+if [[ "$tests_passed" == "true" ]]; then
+  echo "Passed Tests"
+else 
+  echo "Failed Tests"
+  exit 1
+fi"
             sh './test.sh'
         }
     }
