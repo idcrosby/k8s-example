@@ -17,9 +17,10 @@ node {
     }
 
     echo 'Building Docker image'
-    stage('BuildImage') 
-    def app = docker.build("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}", '.')
-    echo app
+    stage('BuildImage') {
+        def app = docker.build("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}", '.')
+        sh "echo $app"
+    }
 
     echo 'Testing Docker image'
     stage("test image") {
