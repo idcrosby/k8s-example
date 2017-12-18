@@ -1,5 +1,7 @@
 node {
     checkout scm
+    echo $GIT_COMMIT
+    
     environment {
        DOCKER_HUB_ACCOUNT = 'icrosby'
        DOCKER_IMAGE_NAME = 'k8s-example-adidas'
