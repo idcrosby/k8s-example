@@ -23,7 +23,7 @@ node {
 
     echo 'Building Docker image'
     stage('BuildImage')
-    def app = docker.build("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:$BUILD_ID_$BUILD_NUMBER", '.')
+    def app = docker.build("${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${BUILD_ID}_${BUILD_NUMBER}", '.')
 
     echo 'Testing Docker image'
     stage("test image") {
@@ -48,7 +48,7 @@ node {
     stage("Deploy") 
     docker.image('smesch/kubectl').inside{
         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-            sh "kubectl --kubeconfig=$KUBECONFIG set image deployment/k8s-example k8s-example=icrosby/k8s-example-adidas:$BUILD_ID_$BUILD_NUMBER"
+            sh "kubectl --kubeconfig=$KUBECONFIG set image deployment/k8s-example k8s-example=icrosby/k8s-example-adidas:${BUILD_ID}_${BUILD_NUMBER}"
         }
     }
 }
