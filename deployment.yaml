@@ -13,6 +13,6 @@ spec:
     spec:
       containers:
         - name: k8s-example
-          image: icrosby/k8s-example
+          image: icrosby/k8s-example-adidas
           ports:
             - containerPort: 8080
