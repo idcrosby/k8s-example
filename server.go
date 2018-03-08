@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"runtime"
 	"strconv"
 	"time"
 )
@@ -50,8 +51,6 @@ func main() {
 		ds.Init(0)
 	}
 
-	fmt.Println("Starting server...")
-
 	http.HandleFunc("/", hello)
 	http.HandleFunc("/readiness", readiness)
 	http.HandleFunc("/liveness", liveness)
@@ -64,11 +63,13 @@ func main() {
 	if err != nil {
 		fmt.Println("Failed to start server: ", err)
 	}
+
+	fmt.Printf("Starting server..., listening on port %s\n", port)
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Request recived at %s", time.Now().String())
-	f.WriteString("Request recived at " + time.Now().String() + "\n")
+	fmt.Println("Request received at %s", time.Now().String())
+	f.WriteString("Request received at " + time.Now().String() + "\n")
 	
 	host, _ := os.Hostname()
 	fmt.Fprint(w, message + "\nI'm running version " + version + " on ", host, "\n")
@@ -135,20 +136,35 @@ func mineBitcoin(w http.ResponseWriter, r *http.Request) {
 	s, err := strconv.Atoi(seconds)
 	if err != nil { panic(err) }
 
-	timeout := time.After(time.Duration(s) * time.Second)
 	fmt.Printf("Timeout set for %d seconds\n", s)
 
-	var tmp float64
-	for {
-		select {
+    f, err := os.Open(os.DevNull)
+    if err != nil { panic(err) }
+    defer f.Close()
 
-		case <- timeout:
-			fmt.Println("timeout")
-			w.Write([]byte("You are now rich."))
-			return
-		}
-		tmp = tmp + rand.Float64() * rand.Float64()
-	}
+    n := runtime.NumCPU()
+    runtime.GOMAXPROCS(n)
+
+	stopchan := make(chan struct{})
+    for i := 0; i < n; i++ {
+        go func() {
+            for {
+            	select {
+      				default:
+                		fmt.Fprintf(f, ".")
+                	case <-stopchan:
+        				// stop
+        				return
+    			}
+            }
+        }()
+    }
+
+    time.Sleep(time.Duration(s) * time.Second)
+    close(stopchan)
+	fmt.Println("timeout")
+	w.Write([]byte("You are now rich."))
+	return
 }
 
 func storeHandler(w http.ResponseWriter, r *http.Request) {
