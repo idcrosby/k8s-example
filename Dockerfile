@@ -13,3 +13,4 @@ RUN chmod +x /test.sh
 ENTRYPOINT ["/home/server"]
 
 EXPOSE 8080
+ENV VERSION 2.0
