@@ -118,6 +118,7 @@ func avatarGen(w http.ResponseWriter, r *http.Request) {
 	buf := new(bytes.Buffer)
 	if err := jpeg.Encode(buf, img, nil); err != nil {
 		fmt.Println("Error encoding image.")
+		return
 	}
 	w.Header().Set("Content-Type", "image/png")
 	w.Header().Set("Content-Length", strconv.Itoa(len(buf.Bytes())))

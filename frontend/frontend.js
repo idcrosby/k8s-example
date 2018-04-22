@@ -2,6 +2,7 @@
 // const url = 'http://k8s-real-demo/store'
 // const url = 'http://localhost:30697/webapp/store'
 const url = '/webapp/store'
+const iconUrl = '/webapp/avatar'
 
 Vue.component('RecordList', {
   props: ['records'],
@@ -25,8 +26,8 @@ Vue.component('Record', {
     <div>
       <input v-model="record.Key" type="text" name="key" v-bind:readonly="readonly">
       <input v-model="record.Value" type="text" name="key">
-      <button v-on:click="updateRecord(record)">v</button>
-      <button v-on:click="deleteRecord(record)">x</button>
+      <button v-on:click="updateRecord(record)">Create/Update</button>
+      <button v-on:click="deleteRecord(record)">Delete</button>
     </div>
   `,
 
@@ -44,6 +45,12 @@ Vue.component('Record', {
           vm.getRecords()
         }
       );
+    },
+    generateIcon: function() {
+      return axios.get(iconUrl)
+        .then((response) => {
+          // Display Icon?
+        })
     }
   }
 });
